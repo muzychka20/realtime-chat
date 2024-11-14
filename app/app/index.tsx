@@ -1,15 +1,26 @@
-import { Text, View } from "react-native";
+import SplashScreen from "../src/screens/Splash";
+import { SafeAreaView, StatusBar, Text, View } from "react-native";
+
 
 export default function Index() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-    </View>
+    <SafeAreaView style={{
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'black'
+    }}>
+      <StatusBar barStyle='light-content' />
+      <SplashScreen />
+      <View>
+        <Text style={{
+          color: 'white',
+          textAlign: 'center',
+          fontSize: 48
+        }}>
+          RealTime
+        </Text>
+      </View>
+    </SafeAreaView>
   );
 }
