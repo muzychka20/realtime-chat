@@ -1,8 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { Animated, SafeAreaView, StatusBar, View, Text } from "react-native";
 import Title from "../common/Title";
 
-function SplashScreen() {
+function SplashScreen({ navigation }) {
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false
+    })
+  }, []);
+
   const translateY = new Animated.Value(0);
   const duration = 800;
 
