@@ -1,4 +1,4 @@
-# run: run-android run-ios
+run: m-run-android m-run-ios
 
 run-android:
 	call cd app && npm run android
