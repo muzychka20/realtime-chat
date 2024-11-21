@@ -3,11 +3,10 @@ import { Animated, SafeAreaView, StatusBar, View, Text } from "react-native";
 import Title from "../common/Title";
 
 function SplashScreen({ navigation }) {
-
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerShown: false
-    })
+      headerShown: false,
+    });
   }, []);
 
   const translateY = new Animated.Value(0);
@@ -15,18 +14,18 @@ function SplashScreen({ navigation }) {
 
   useEffect(() => {
     Animated.loop(
-        Animated.sequence([
+      Animated.sequence([
         Animated.timing(translateY, {
-            toValue: 20,
-            duration: duration,
-            useNativeDriver: true,
+          toValue: 20,
+          duration: duration,
+          useNativeDriver: true,
         }),
         Animated.timing(translateY, {
-            toValue: 0,
-            duration: duration,
-            useNativeDriver: true,
+          toValue: 0,
+          duration: duration,
+          useNativeDriver: true,
         }),
-        ])
+      ])
     ).start();
   }, []);
 
