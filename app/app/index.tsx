@@ -7,11 +7,16 @@ import SignUpScreen from "../src/screens/SignUp";
 import SearchScreen from "../src/screens/Search";
 import HomeScreen from "../src/screens/Home";
 import { useLayoutEffect, useState } from "react";
+import { useFonts } from "expo-font";
 
 const Stack = createNativeStackNavigator();
 
 export default function Index() {
   
+  const [fontsLoaded] = useFonts({
+    "LeckerliOne-Regular": require('../assets/fonts/LeckerliOne-Regular.ttf'),
+  });
+
   const [initialized] = useState(true);
   const [authenticated] = useState(false);
 

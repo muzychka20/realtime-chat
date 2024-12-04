@@ -62,7 +62,7 @@ function SignInScreen({ navigation }) {
               paddingHorizontal: 20,
             }}
           >
-            <Title text="chat" color="#202020" />
+            <Title text="RealtimeChat" color="#202020" />
             <Input
               title="Username"
               value={username}
