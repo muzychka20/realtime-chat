@@ -12,6 +12,8 @@ import { View } from "react-native";
 import Title from "../common/Title";
 import Input from "../common/Input";
 import Button from "../common/Button";
+import api from "../core/api";
+import utils from "../core/utils"
 
 function SignInScreen({ navigation }) {
   const [username, setUsername] = useState("");
@@ -47,8 +49,28 @@ function SignInScreen({ navigation }) {
     }
 
     // Make  sigin request
-
-    //...
+    api({
+      method: "POST",
+      url: "/chat/signin/",
+      data: {
+        username: username,
+        password: password,
+      },
+    })
+      .then((response) => {
+        utils.log("Sign in: ", response.data);
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log(error.config);
+        }
+      });
   }
 
   return (
