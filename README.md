@@ -39,3 +39,14 @@ Install the dependencies from requirements.txt:
 ```
 pip install -r requirements.txt
 ```
+
+In app 
+```
+npm i
+```
+
+## Makefiel
+Windows:
+```
+mingw32-make.exe Makefile run-android
+```
