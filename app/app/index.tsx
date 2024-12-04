@@ -8,6 +8,7 @@ import SearchScreen from "../src/screens/Search";
 import HomeScreen from "../src/screens/Home";
 import { useLayoutEffect, useState } from "react";
 import { useFonts } from "expo-font";
+import useGlobal from "../src/core/global"
 
 const Stack = createNativeStackNavigator();
 
@@ -17,8 +18,8 @@ export default function Index() {
     "LeckerliOne-Regular": require('../assets/fonts/LeckerliOne-Regular.ttf'),
   });
 
-  const [initialized] = useState(true);
-  const [authenticated] = useState(false);
+  const [initialized] = useState(true); 
+  const authenticated = useGlobal(state => state.authenticated)
 
   return (
     <>
