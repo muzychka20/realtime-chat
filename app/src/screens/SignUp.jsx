@@ -9,6 +9,8 @@ import {
 import { useLayoutEffect, useState } from "react";
 import Input from "../common/Input";
 import Button from "../common/Button";
+import utils from "../core/utils";
+import api from "../core/api";
 
 function SignUpScreen({ navigation }) {
   const [username, setUsername] = useState("");
@@ -70,6 +72,32 @@ function SignUpScreen({ navigation }) {
     ) {
       return;
     }
+
+    // Make signup request
+    api({
+      method: "POST",
+      url: "/chat/signup/",
+      data: {
+        username: username,
+        first_name: firstName,
+        last_name: lastName,        
+        password: password1,
+      },
+    })
+      .then((response) => {
+        utils.log("Sign up: ", response.data);
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log(error.config);
+        }
+      });
 
     console.log(
       "onSignUp: ",
@@ -135,7 +163,7 @@ function SignUpScreen({ navigation }) {
               setError={setPassword2Error}
               secureTextEntry={true}
             />
-            <Button title="Sign In" onPress={onSignUp} />
+            <Button title="Sign Up" onPress={onSignUp} />
             <Text
               style={{ textAlign: "center", marginTop: 40 }}
               onPress={() => navigation.navigate("SignIn")}
