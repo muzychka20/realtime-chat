@@ -1,5 +1,13 @@
 import { useLayoutEffect, useState } from "react";
-import { SafeAreaView, Text, TextInput, TouchableOpacity } from "react-native";
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  SafeAreaView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { View } from "react-native";
 import Title from "../common/Title";
 import Input from "../common/Input";
@@ -22,20 +30,20 @@ function SignInScreen({ navigation }) {
     console.log("onSignIn: ", username, password);
 
     // Check usernmae
-    const failUsername = !username
+    const failUsername = !username;
     if (failUsername) {
-      setUsernameError('Username is not provided')
+      setUsernameError("Username is not provided");
     }
 
     // Check password
-    const failPassword = !password
+    const failPassword = !password;
     if (failPassword) {
-      setPasswordError('Password is not provided')
+      setPasswordError("Password is not provided");
     }
 
     // Break out of this this function if there were any issues
     if (failPassword || failUsername) {
-      return
+      return;
     }
 
     // Make  sigin request
@@ -45,36 +53,42 @@ function SignInScreen({ navigation }) {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          paddingHorizontal: 20,
-        }}
-      >
-        <Title text="chat" color="#202020" />
-        <Input
-          title="Username"
-          value={username}
-          error={usernameError}
-          setValue={setUsername}
-          setError={setUsernameError}
-        />
-        <Input
-          title="Password"
-          value={password}
-          error={passwordError}
-          setValue={setPassword}
-          setError={setPasswordError}
-        />
-        <Button title="Sign In" onPress={onSignIn} />
-        <Text
-          style={{ textAlign: "center", marginTop: 40 }}
-          onPress={() => navigation.navigate("SignUp")}
-        >
-          Don't have an account? <Text style={{ color: "blue" }}>Sign Up</Text>
-        </Text>
-      </View>
+      <KeyboardAvoidingView behaviour="height" style={{ flex: 1 }}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              paddingHorizontal: 20,
+            }}
+          >
+            <Title text="chat" color="#202020" />
+            <Input
+              title="Username"
+              value={username}
+              error={usernameError}
+              setValue={setUsername}
+              setError={setUsernameError}
+            />
+            <Input
+              title="Password"
+              value={password}
+              error={passwordError}
+              setValue={setPassword}
+              setError={setPasswordError}
+              secureTextEntry={true}
+            />
+            <Button title="Sign In" onPress={onSignIn} />
+            <Text
+              style={{ textAlign: "center", marginTop: 40 }}
+              onPress={() => navigation.navigate("SignUp")}
+            >
+              Don't have an account?{" "}
+              <Text style={{ color: "blue" }}>Sign Up</Text>
+            </Text>
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
