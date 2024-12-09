@@ -13,8 +13,8 @@ import Title from "../common/Title";
 import Input from "../common/Input";
 import Button from "../common/Button";
 import api from "../core/api";
-import utils from "../core/utils"
-import useGlobal from "../../src/core/global"
+import utils from "../core/utils";
+import useGlobal from "../../src/core/global";
 
 function SignInScreen({ navigation }) {
   const [username, setUsername] = useState("");
@@ -23,7 +23,7 @@ function SignInScreen({ navigation }) {
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  const login = useGlobal(state => state.login)
+  const login = useGlobal((state) => state.login);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -51,7 +51,7 @@ function SignInScreen({ navigation }) {
       return;
     }
 
-    // Make  sigin request
+    // Make signin request
     api({
       method: "POST",
       url: "/chat/signin/",
@@ -62,7 +62,11 @@ function SignInScreen({ navigation }) {
     })
       .then((response) => {
         utils.log("Sign in: ", response.data);
-        login(response.data)
+        const credentials = {
+          username: username,
+          password: password,
+        };
+        login(credentials, response.data.user);
       })
       .catch((error) => {
         if (error.response) {

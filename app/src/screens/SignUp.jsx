@@ -89,7 +89,11 @@ function SignUpScreen({ navigation }) {
     })
       .then((response) => {
         utils.log("Sign up: ", response.data);
-        login(response.data)
+        const credentials = {
+          username: username,
+          password: password1,
+        };
+        login(credentials, response.data.user)
       })
       .catch((error) => {
         if (error.response) {
