@@ -1,38 +1,36 @@
-import EncryptedStorage from 'react-native-encrypted-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-async function set(key, object) {
-    try {
-        await EncryptedStorage.setItem(key, JSON.stringify(object))
-    } catch(error) {
-        console.log('secure.set:', error)
-    }
-}
+const set = async (key, object) => {
+  try {
+    await AsyncStorage.setItem(key, JSON.stringify(object));
+  } catch (error) {
+    console.log("secure.set:", error);
+  }
+};
 
-async function get(key) {
-    try {
-        const data = await EncryptedStorage.getItem(key)
-        if (data !== undefined) {
-            return JSON.parse(data)
-        }
-    } catch(error) {
-        console.log('secure.get:', error)
-    }
-}
+const get = async (key) => {
+  try {
+    const jsonValue = await AsyncStorage.getItem(key);
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
+  } catch (error) {
+    console.log("secure.get:", error);
+  }
+};
 
-async function remove(key) {
-    try {
-        await EncryptedStorage.removeItem(key)
-    } catch(error) {
-        console.log('secure.remove:', error)
-    }
-}
+const remove = async (key) => {
+  try {
+    await AsyncStorage.removeItem(key);
+  } catch (error) {
+    console.log("secure.remove:", error);
+  }
+};
 
-async function wipe() {
-    try {
-        await EncryptedStorage.clear()
-    } catch(error) {
-        console.log('secure.remove:', error)
-    }
-}
+const wipe = async () => {
+  try {
+    await AsyncStorage.clear();
+  } catch (error) {
+    console.log("secure.remove:", error);
+  }
+};
 
-export default secure = { set, get, remove, wipe }
+export default secure = { set, get, remove, wipe };

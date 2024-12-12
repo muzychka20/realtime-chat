@@ -4,9 +4,7 @@ import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons/faRightFro
 import useGlobal from "../core/global";
 
 function ProfileLogout() {
-  
-  const logout = useGlobal(state => state.logout)
-
+  const logout = useGlobal((state) => state.logout);
   return (
     <TouchableOpacity
       onPress={logout}
@@ -20,7 +18,7 @@ function ProfileLogout() {
         backgroundColor: "#202020",
         marginTop: 40,
       }}
-    >      
+    >
       <FontAwesomeIcon
         icon={faRightFromBracket}
         size={20}
@@ -40,6 +38,7 @@ function ProfileLogout() {
 }
 
 function ProfileScreen() {
+  const user = useGlobal((state) => state.user);  
   return (
     <View
       style={{
@@ -58,10 +57,10 @@ function ProfileScreen() {
           color: "#303030",
           fontSize: 20,
           fontWeight: "bold",
-          marginTop: 6,
+          marginBottom: 6,
         }}
       >
-        Nick Legend
+        {user.name}
       </Text>
       <Text
         style={{
@@ -70,7 +69,7 @@ function ProfileScreen() {
           fontSize: 14,
         }}
       >
-        @nick
+        @{user.username}
       </Text>
       <ProfileLogout></ProfileLogout>
     </View>

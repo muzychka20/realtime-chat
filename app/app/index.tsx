@@ -6,7 +6,7 @@ import SignInScreen from "../src/screens/SignIn";
 import SignUpScreen from "../src/screens/SignUp";
 import SearchScreen from "../src/screens/Search";
 import HomeScreen from "../src/screens/Home";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useFonts } from "expo-font";
 import useGlobal from "../src/core/global"
 
@@ -18,8 +18,14 @@ export default function Index() {
     "LeckerliOne-Regular": require('../assets/fonts/LeckerliOne-Regular.ttf'),
   });
 
-  const [initialized] = useState(true); 
+  const initialized = useGlobal(state => state.initialized)
   const authenticated = useGlobal(state => state.authenticated)
+
+  const init = useGlobal(state => state.init)
+
+  useEffect(() => {
+    init()
+  }, [])
 
   return (
     <>
