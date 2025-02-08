@@ -29,7 +29,7 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '10.0.2.2']
 
 AUTH_USER_MODEL = 'chat.User'
 
-REST_FRAMEWORK = {    
+REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
@@ -37,7 +37,7 @@ REST_FRAMEWORK = {
 
 # Thumbnail uploads
 MEDIA_ROOT = BASE_DIR / 'media'
-MEDIA_ROOT = '/media/'
+MEDIA_URL = '/media/'
 
 # Daphne
 ASGI_APPLICATION = 'core.asgi.application'
@@ -64,7 +64,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'chat',    
+    'chat',
 ]
 
 MIDDLEWARE = [
@@ -74,7 +74,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',    
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'

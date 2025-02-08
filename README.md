@@ -15,9 +15,19 @@ When you run this command, it creates (or overwrites) a **requirements.txt** fil
 
 ## Steps to Start the Project After Cloning
 
+Redis
+
+Install:
+```
+brew install redis
+```
+
+Start it:
+```
+redis-server
+```
 
 Create the virtual environment:
-
 
 ```
 python -m venv env  # or python3 for macOS/Linux

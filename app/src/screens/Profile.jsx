@@ -3,14 +3,13 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons/faRightFromBracket";
 import { faPencil } from "@fortawesome/free-solid-svg-icons/faPencil";
 import useGlobal from "../core/global";
-
-import { useState } from "react";
-
 import * as ImagePicker from "expo-image-picker";
 import utils from "../core/utils";
+import Thumbnail from "../common/Thumbnail";
 
 function ProfileImage() {
-  const [image, setImage] = useState(null);
+  const uploadThumbnail = useGlobal((state) => state.uploadThumbnail);
+  const user = useGlobal((state) => state.user);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -18,21 +17,22 @@ function ProfileImage() {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      base64: true,
     });
 
     utils.log(result);
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      uploadThumbnail({
+        fileName: result.assets[0].uri.split("/").pop(),
+        base64: result.assets[0].base64,
+      });
     }
   };
 
   return (
     <TouchableOpacity style={{ marginBottom: 20 }} onPress={pickImage}>
-      <Image
-        source={image ? { uri: image } : require("../assets/profile.jpg")}
-        style={{ width: 180, height: 180, borderRadius: 90 }}
-      />
+      <Thumbnail url={user.thumbnail} size={180} />
       <View
         style={{
           position: "absolute",

@@ -3,7 +3,17 @@ import secure from "./secure";
 import api, { ADDRESS } from "./api";
 import utils from "./utils";
 
-const useGlobal = create((set) => ({
+//------------------------------------
+//  Socket receive message handlers
+//------------------------------------
+
+function responseThumbnail(set, get, data) {
+  set((state) => ({
+    user: data,
+  }));
+}
+
+const useGlobal = create((set, get) => ({
   //------------------
   //  Initialization
   //------------------
@@ -27,7 +37,7 @@ const useGlobal = create((set) => ({
         const user = response.data.user;
         const tokens = response.data.tokens;
 
-        secure.set('tokens', tokens)
+        secure.set("tokens", tokens);
 
         set((state) => ({
           initialized: true,
@@ -68,43 +78,70 @@ const useGlobal = create((set) => ({
     }));
   },
 
-
   //------------------
   //    Websocket
   //------------------
 
   socket: null,
 
-  socketConnect: async() => {
-    const tokens = await secure.get('tokens')
+  socketConnect: async () => {
+    const tokens = await secure.get("tokens");
 
-    const url = `ws://${ADDRESS}/chat/?token=${tokens.access}`
-    utils.log(url)
-    const socket = new WebSocket(url)
+    const url = `ws://${ADDRESS}/chat/?token=${tokens.access}`;
+
+    const socket = new WebSocket(url);
 
     socket.onopen = () => {
-      utils.log('socket.onopen')
-    }
+      utils.log("socket.onopen");
+    };
 
-    socket.onmessage = () => {
-      utils.log('socket.message')
-    }
+    socket.onmessage = (event) => {
+      // Convert data to javascript object
+      const parsed = JSON.parse(event.data);
+
+      // Debug log formatted data
+      utils.log("onmessage:", parsed);
+
+      const responses = {
+        thumbnail: responseThumbnail,
+      };
+      const resp = responses[parsed.source];
+      if (!resp) {
+        utils.log("parsed.source: '" + parsed.source + "' not found");
+        return;
+      }
+      // Call response function
+      resp(set, get, parsed.data);
+    };
 
     socket.onerror = (e) => {
-      utils.log('socket.error', e.message)
-    }
+      utils.log("socket.error", e.message);
+    };
 
     socket.onclose = () => {
-      utils.log('socket.onclose')
-    }
+      utils.log("socket.onclose");
+    };
 
-    set((state) => {
-      socket: socket
-    })
+    set((state) => ({
+      socket: socket,
+    }));
   },
 
-  socketClose: () => {
-    
+  socketClose: () => {},
+
+  //------------------
+  //  Thumbnail
+  //------------------
+
+  uploadThumbnail: (file) => {
+    const socket = get().socket;
+    socket.send(
+      JSON.stringify({
+        source: "thumbnail",
+        base64: file.base64,
+        filename: file.fileName,
+      })
+    );
   },
 }));
 

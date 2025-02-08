@@ -16,13 +16,14 @@ import RequestsScreen from "./Requests";
 import FriendsScreen from "./Friends";
 import ProfileScreen from "./Profile";
 import useGlobal from "../../src/core/global";
+import Thumbnail from "../common/Thumbnail";
 
 const Tab = createBottomTabNavigator();
 
 function HomeScreen({ navigation }) {
-
-  const socketConnect = useGlobal(state => state.socketConnect)
-  const socketClose = useGlobal(state => state.socketClose)
+  const socketConnect = useGlobal((state) => state.socketConnect);
+  const socketClose = useGlobal((state) => state.socketClose);
+  const user = useGlobal((state) => state.user);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -31,10 +32,10 @@ function HomeScreen({ navigation }) {
   }, []);
 
   useEffect(() => {
-    socketConnect()
+    socketConnect();
     return () => {
-      socketClose()
-    }
+      socketClose();
+    };
   }, []);
 
   return (
@@ -43,10 +44,7 @@ function HomeScreen({ navigation }) {
       screenOptions={({ route }) => ({
         headerLeft: () => (
           <View style={{ marginLeft: 16 }}>
-            <Image
-              source={require("../assets/profile.jpg")}
-              style={{ width: 28, height: 28, borderRadius: 14 }}
-            />
+            <Thumbnail url={user.thumbnail} size={28} />
           </View>
         ),
         headerRight: () => (

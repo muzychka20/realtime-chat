@@ -9,6 +9,7 @@ import HomeScreen from "../src/screens/Home";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useFonts } from "expo-font";
 import useGlobal from "../src/core/global"
+import React from "react";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,7 +18,7 @@ export default function Index() {
   const [fontsLoaded] = useFonts({
     "LeckerliOne-Regular": require('../assets/fonts/LeckerliOne-Regular.ttf'),
   });
-
+  
   const initialized = useGlobal(state => state.initialized)
   const authenticated = useGlobal(state => state.authenticated)
 
