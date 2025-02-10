@@ -66,7 +66,7 @@ function SignInScreen({ navigation }) {
           username: username,
           password: password,
         };
-        login(credentials, response.data.user);
+        login(credentials, response.data.user, response.data.tokens);
       })
       .catch((error) => {
         if (error.response) {

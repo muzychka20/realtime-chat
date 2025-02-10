@@ -11,7 +11,7 @@ import Input from "../common/Input";
 import Button from "../common/Button";
 import utils from "../core/utils";
 import api from "../core/api";
-import useGlobal from "../../src/core/global"
+import useGlobal from "../../src/core/global";
 
 function SignUpScreen({ navigation }) {
   const [username, setUsername] = useState("");
@@ -26,7 +26,7 @@ function SignUpScreen({ navigation }) {
   const [password1Error, setPassword1Error] = useState("");
   const [password2Error, setPassword2Error] = useState("");
 
-  const login = useGlobal(state => state.login)
+  const login = useGlobal((state) => state.login);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -83,7 +83,7 @@ function SignUpScreen({ navigation }) {
       data: {
         username: username,
         first_name: firstName,
-        last_name: lastName,        
+        last_name: lastName,
         password: password1,
       },
     })
@@ -93,7 +93,7 @@ function SignUpScreen({ navigation }) {
           username: username,
           password: password1,
         };
-        login(credentials, response.data.user)
+        login(credentials, response.data.user, response.data.tokens);
       })
       .catch((error) => {
         if (error.response) {

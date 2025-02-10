@@ -7,6 +7,12 @@ import utils from "./utils";
 //  Socket receive message handlers
 //------------------------------------
 
+function responseSearch(set, get, data) {
+  set((state) => ({
+    searchList: data,
+  }));
+}
+
 function responseThumbnail(set, get, data) {
   set((state) => ({
     user: data,
@@ -68,6 +74,7 @@ const useGlobal = create((set, get) => ({
       authenticated: true,
       user: user,
     }));
+    get().socketConnect();
   },
 
   logout: () => {
@@ -103,8 +110,10 @@ const useGlobal = create((set, get) => ({
       utils.log("onmessage:", parsed);
 
       const responses = {
-        thumbnail: responseThumbnail,
+        'search': responseSearch,
+        'thumbnail': responseThumbnail,
       };
+
       const resp = responses[parsed.source];
       if (!resp) {
         utils.log("parsed.source: '" + parsed.source + "' not found");
@@ -127,7 +136,37 @@ const useGlobal = create((set, get) => ({
     }));
   },
 
-  socketClose: () => {},
+  socketClose: () => {
+    const socket = get().socket;
+    if (socket) {
+      socket.close();
+    }
+    set((state) => ({
+      socket: null,
+    }));
+  },
+
+  //------------------
+  //  SearchList
+  //------------------
+
+  searchList: null,
+
+  searchUsers: (query) => {
+    if (query) {
+      const socket = get().socket;
+      socket.send(
+        JSON.stringify({
+          source: "search",
+          query: query,
+        })
+      );
+    } else {
+      set((state) => ({
+        searchList: null,
+      }));
+    }
+  },
 
   //------------------
   //  Thumbnail
@@ -135,6 +174,10 @@ const useGlobal = create((set, get) => ({
 
   uploadThumbnail: (file) => {
     const socket = get().socket;
+    if (!socket || socket.readyState !== WebSocket.OPEN) {
+      console.error("WebSocket не подключен");
+      return;
+    }
     socket.send(
       JSON.stringify({
         source: "thumbnail",

@@ -38,6 +38,10 @@ function HomeScreen({ navigation }) {
     };
   }, []);
 
+  function onSearch() {
+    navigation.navigate("Search");
+  }
+
   return (
     <Tab.Navigator
       // set icons in the tabs
@@ -48,7 +52,7 @@ function HomeScreen({ navigation }) {
           </View>
         ),
         headerRight: () => (
-          <TouchableOpacity>
+          <TouchableOpacity onPress={onSearch}>
             <FontAwesomeIcon
               style={{ marginRight: 16 }}
               icon={faSearch}
