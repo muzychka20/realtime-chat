@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, Connection
 
 class SignUpSerializer(serializers.ModelSerializer):
     class Meta:
@@ -58,5 +58,24 @@ class SearchSerializer(UserSerializer):
         ]
         
     def get_status(self, obj):
+        if obj.pending_them:
+            return 'pending-them'
+        elif obj.pending_me:
+            return 'pending-me'
+        elif obj.connected:
+            return 'connected'
         return 'no-connection'
         
+        
+class RequestSerializer(serializers.ModelSerializer):    
+    sender = UserSerializer()
+    receiver = UserSerializer()
+    
+    class Meta:
+        model = Connection
+        fields = [
+            'id',
+            'sender',
+            'receiver',
+            'created'
+        ]

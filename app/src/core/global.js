@@ -2,10 +2,40 @@ import { create } from "zustand";
 import secure from "./secure";
 import api, { ADDRESS } from "./api";
 import utils from "./utils";
+import Index from "@/app";
 
 //------------------------------------
 //  Socket receive message handlers
 //------------------------------------
+
+function responseRequestConnect(set, get, connection) {
+  const user = get().user;
+  // If I was the one that made the connect request, update the search list row
+  if (user.username === connection.sender.username) {
+    const searchList = [...get().searchList];
+    const searchIndex = searchList.findIndex(
+      (request) => request.username === connection.receiver.username
+    );
+    if (searchIndex >= 0) {
+      searchList[searchIndex].status = "pending-them";
+      set((state) => ({
+        searchList: searchList,
+      }));
+    }
+    // If they were the one that sent the connect request, add request to request list
+  } else {
+    const requestList = [...get().requestList];
+    const requestIndex = requestList.findIndex(
+      (request) => request.sender.username === connection.sender.username
+    );
+    if (requestIndex === -1) {
+      requestList.unshift(connection);
+      set((state) => ({
+        requestList: requestList,
+      }));
+    }
+  }
+}
 
 function responseSearch(set, get, data) {
   set((state) => ({
@@ -16,6 +46,12 @@ function responseSearch(set, get, data) {
 function responseThumbnail(set, get, data) {
   set((state) => ({
     user: data,
+  }));
+}
+
+function responseRequestList(set, get, requestList) {
+  set((state) => ({
+    requestList: requestList,
   }));
 }
 
@@ -100,6 +136,12 @@ const useGlobal = create((set, get) => ({
 
     socket.onopen = () => {
       utils.log("socket.onopen");
+
+      socket.send(
+        JSON.stringify({
+          source: "request.list",
+        })
+      );
     };
 
     socket.onmessage = (event) => {
@@ -110,8 +152,10 @@ const useGlobal = create((set, get) => ({
       utils.log("onmessage:", parsed);
 
       const responses = {
-        'search': responseSearch,
-        'thumbnail': responseThumbnail,
+        "request.connect": responseRequestConnect,
+        "request.list": responseRequestList,
+        search: responseSearch,
+        thumbnail: responseThumbnail,
       };
 
       const resp = responses[parsed.source];
@@ -147,7 +191,7 @@ const useGlobal = create((set, get) => ({
   },
 
   //------------------
-  //  SearchList
+  //  Search
   //------------------
 
   searchList: null,
@@ -166,6 +210,32 @@ const useGlobal = create((set, get) => ({
         searchList: null,
       }));
     }
+  },
+
+  //------------------
+  //  Requests
+  //------------------
+
+  requestList: null,
+
+  requestConnect: (username) => {
+    const socket = get().socket;
+    socket.send(
+      JSON.stringify({
+        source: "request.connect",
+        username: username,
+      })
+    );
+  },
+
+  requestAccept: (username) => {
+    const socket = get().socket;
+    socket.send(
+      JSON.stringify({
+        source: "request.accept",
+        username: username,
+      })
+    );
   },
 
   //------------------

@@ -13,6 +13,7 @@ import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons/faTrian
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons/faMagnifyingGlass";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons/faCircleCheck";
 import Empty from "../common/Empty";
+import Cell from "../common/Cell";
 import Thumbnail from "../common/Thumbnail";
 import useGlobal from "../core/global";
 
@@ -31,13 +32,15 @@ function SearchButton({ user }) {
     );
   }
 
+  const requestConnect = useGlobal((state) => state.requestConnect);
+
   const data = {};
 
   switch (user.status) {
     case "no-connection":
       data.text = "Connect";
       data.disabled = false;
-      data.onPress = () => {};
+      data.onPress = () => requestConnect(user.username);
       break;
 
     case "pending-them":
@@ -83,16 +86,7 @@ function SearchButton({ user }) {
 
 function SearchRow({ user }) {
   return (
-    <View
-      style={{
-        paddingHorizontal: 20,
-        flexDirection: "row",
-        alignItems: "center",
-        borderBottomWidth: 1,
-        borderColor: "#c7c7c7",
-        height: 106,
-      }}
-    >
+    <Cell>
       <Thumbnail url={user.thumbnail} size={76} />
       <View style={{ flex: 1, paddingHorizontal: 16 }}>
         <Text
@@ -103,7 +97,7 @@ function SearchRow({ user }) {
         <Text style={{ color: "#2020202" }}>{user.username}</Text>
       </View>
       <SearchButton user={user} />
-    </View>
+    </Cell>
   );
 }
 
