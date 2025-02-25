@@ -60,3 +60,8 @@ Windows:
 ```
 mingw32-make.exe Makefile run-android
 ```
+
+## Open simulator in terminal (macOS)
+```
+open -a Simulator.app
+```

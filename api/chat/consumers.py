@@ -40,6 +40,10 @@ class ChatConsumer(WebsocketConsumer):
         # Pretty print   python dict
         print('✅  receive', json.dumps(data, indent=2))
 
+        # Accept friend request
+        if data_source == 'request.accept':
+            self.receive_request_accept(data)
+
         # Make friend request
         if data_source == 'request.connect':
             self.receive_request_connect(data)
@@ -57,8 +61,35 @@ class ChatConsumer(WebsocketConsumer):
         elif data_source == "thumbnail":
             self.receive_thumbnail(data)
 
+
+    def receive_request_accept(self, data):
+        username = data.get("username")
+        # Fetch connection object
+        try:
+            connection = Connection.objects.get(
+                sender__username = username,
+                receiver=self.scope['user']
+            )
+        except Connection.DoesNotExist:
+            print('Error: connection does not exists')     
+            return
+        # Update the connection
+        connection.accepted = True
+        connection.save()
+
+        serialized = RequestSerializer(connection)
+        # Send accepted request to sender
+        self.send_group(
+            connection.sender.username, 'request.accept', serialized.data
+        )
+        # Send accepted request to receiver
+        self.send_group(
+            connection.receiver.username, 'request.accept', serialized.data
+        )
+
     def receive_request_connect(self, data):
         username = data.get('username')
+        
 
         # Attempt to fetch the receiving user
         try:

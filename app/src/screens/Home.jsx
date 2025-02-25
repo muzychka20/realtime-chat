@@ -63,9 +63,9 @@ function HomeScreen({ navigation }) {
         ),
         tabBarIcon: ({ focused, color, size }) => {
           const icons = {
-            Requests: faUser,
-            Friends: faBell,
-            Profile: faInbox,
+            Requests: faBell,
+            Friends: faInbox,
+            Profile: faUser,
           };
 
           const icon = icons[route.name];
