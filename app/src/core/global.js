@@ -2,57 +2,61 @@ import { create } from "zustand";
 import secure from "./secure";
 import api, { ADDRESS } from "./api";
 import utils from "./utils";
-import Index from "@/app";
 
 //------------------------------------
 //  Socket receive message handlers
 //------------------------------------
 
+function responseFriendList(set, get, friendList) {
+  set((state) => ({
+    friendList: friendList,
+  }));
+}
+
 function responseRequestAccept(set, get, connection) {
-  const user = get().user
+  const user = get().user;
   // If I was the one that accepted the request, remove
   // request from the requestList
   if (user.username === connection.receiver.username) {
-    const requestList = [...get().requestList]
+    const requestList = [...get().requestList];
     const requestIndex = requestList.findIndex(
-      request => request.id === connection.id
-    )
+      (request) => request.id === connection.id
+    );
     if (requestIndex >= 0) {
-      requestList.splice(requestIndex, 1)
+      requestList.splice(requestIndex, 1);
       set((state) => ({
-        requestList: requestList
-      }))
+        requestList: requestList,
+      }));
     }
   }
   // if the corresponding user is contained within the
   // searchList for the acceptor or the acceptee, update the state of the searchList item
-  const sl = get().searchList
+  const sl = get().searchList;
   if (sl === null) {
-    return
+    return;
   }
-  const searchList = [...sl]
+  const searchList = [...sl];
 
-  let searchIndex = -1
-  
+  let searchIndex = -1;
+
   // If this user accepted
   if (user.username === connection.receiver.username) {
     searchIndex = searchList.findIndex(
-      user => user.username === connection.sender.username
-    )
-    // If the other user accepted  
+      (user) => user.username === connection.sender.username
+    );
+    // If the other user accepted
   } else {
     searchIndex = searchList.findIndex(
-      user => user.username === connection.receiver.username
-    )
+      (user) => user.username === connection.receiver.username
+    );
   }
   if (searchIndex >= 0) {
-    searchList[searchIndex].status = 'connected'
+    searchList[searchIndex].status = "connected";
     set((state) => ({
-      searchList: searchList
-    }))
+      searchList: searchList,
+    }));
   }
 }
-
 
 function responseRequestConnect(set, get, connection) {
   const user = get().user;
@@ -188,6 +192,12 @@ const useGlobal = create((set, get) => ({
           source: "request.list",
         })
       );
+
+      socket.send(
+        JSON.stringify({
+          source: "friend.list",
+        })
+      );
     };
 
     socket.onmessage = (event) => {
@@ -198,11 +208,12 @@ const useGlobal = create((set, get) => ({
       utils.log("onmessage:", parsed);
 
       const responses = {
+        "friend.list": responseFriendList,
         "request.accept": responseRequestAccept,
         "request.connect": responseRequestConnect,
         "request.list": responseRequestList,
-        "search": responseSearch,
-        "thumbnail": responseThumbnail,
+        search: responseSearch,
+        thumbnail: responseThumbnail,
       };
 
       const resp = responses[parsed.source];
@@ -258,6 +269,12 @@ const useGlobal = create((set, get) => ({
       }));
     }
   },
+
+  //------------------
+  //  Friends
+  //------------------
+
+  friendList: null,
 
   //------------------
   //  Requests

@@ -4,8 +4,6 @@ import {
   KeyboardAvoidingView,
   SafeAreaView,
   Text,
-  TextInput,
-  TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
 import { View } from "react-native";

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import User, Connection
 
+
 class SignUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -16,7 +17,7 @@ class SignUpSerializer(serializers.ModelSerializer):
                 'write_only': True
             }
         }
-        
+
     def create(self, validated_data):
         # Clean all values, set as lowercase
         username = validated_data['username'].lower()
@@ -33,8 +34,10 @@ class SignUpSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+
 class UserSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = ['username', 'name', 'thumbnail']
@@ -47,7 +50,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class SearchSerializer(UserSerializer):
     status = serializers.SerializerMethodField()
-    
+
     class Meta:
         model = User
         fields = [
@@ -56,7 +59,7 @@ class SearchSerializer(UserSerializer):
             'thumbnail',
             'status',
         ]
-        
+
     def get_status(self, obj):
         if obj.pending_them:
             return 'pending-them'
@@ -65,12 +68,12 @@ class SearchSerializer(UserSerializer):
         elif obj.connected:
             return 'connected'
         return 'no-connection'
-        
-        
-class RequestSerializer(serializers.ModelSerializer):    
+
+
+class RequestSerializer(serializers.ModelSerializer):
     sender = UserSerializer()
     receiver = UserSerializer()
-    
+
     class Meta:
         model = Connection
         fields = [
@@ -79,3 +82,30 @@ class RequestSerializer(serializers.ModelSerializer):
             'receiver',
             'created'
         ]
+
+
+class FriendSerializer(serializers.ModelSerializer):
+    friend = serializers.SerializerMethodField()
+    preview = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Connection
+        fields = [
+            'id',
+            'friend',
+            'preview',
+            'updated'
+        ]
+
+    def get_friend(self, obj):
+        # if I'm the sender
+        if self.context['user'] == obj.sender:
+            return UserSerializer(obj.receiver).data
+        # if I'm the receiver
+        if self.context['user'] == obj.receiver:
+            return UserSerializer(obj.sender).data
+        else:
+            print('Error: No user found in friendserializer!')
+
+    def get_preview(self, data):
+        return 'New connection!'

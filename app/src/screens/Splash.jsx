@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect } from "react";
-import { Animated, SafeAreaView, StatusBar, View, Text } from "react-native";
+import { Animated, SafeAreaView, StatusBar } from "react-native";
 import Title from "../common/Title";
 
 function SplashScreen({ navigation }) {

@@ -1,10 +1,4 @@
-import {
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  Image,
-  View,
-} from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useEffect, useLayoutEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -73,6 +67,7 @@ function HomeScreen({ navigation }) {
         },
         tabBarActiveTintColor: "#202020",
         tabBarShowLabel: false,
+        // headerShown: false
       })}
     >
       <Tab.Screen name="Requests" component={RequestsScreen} />

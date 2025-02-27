@@ -1,17 +1,10 @@
-import {
-  ActivityIndicator,
-  FlatList,
-  SafeAreaView,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import useGlobal from "../core/global";
 import Empty from "../common/Empty";
 import { faBell } from "@fortawesome/free-solid-svg-icons/faBell";
 import Cell from "../common/Cell";
 import Thumbnail from "../common/Thumbnail";
 import { TouchableOpacity } from "react-native";
-
 
 function RequestAccept({ item }) {
   const requestAccept = useGlobal((state) => state.requestAccept);
