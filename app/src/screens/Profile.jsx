@@ -96,6 +96,7 @@ function ProfileScreen() {
         flex: 1,
         alignItems: "center",
         paddingTop: 100,
+        backgroundColor: 'white'
       }}
     >
       <ProfileImage />

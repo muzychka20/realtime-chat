@@ -13,6 +13,19 @@ function responseFriendList(set, get, friendList) {
   }));
 }
 
+function responseMessageList(set, get, data) {
+  set((state) => ({
+    messagesList: [...get().messagesList, ...data.messages],
+  }));
+}
+
+function responseMessageSend(set, get, data) {
+  const messagesList = [data.message, ...get().messagesList];
+  set((state) => ({
+    messagesList: messagesList,
+  }));
+}
+
 function responseRequestAccept(set, get, connection) {
   const user = get().user;
   // If I was the one that accepted the request, remove
@@ -209,6 +222,8 @@ const useGlobal = create((set, get) => ({
 
       const responses = {
         "friend.list": responseFriendList,
+        "message.list": responseMessageList,
+        "message.send": responseMessageSend,
         "request.accept": responseRequestAccept,
         "request.connect": responseRequestConnect,
         "request.list": responseRequestList,
@@ -275,6 +290,39 @@ const useGlobal = create((set, get) => ({
   //------------------
 
   friendList: null,
+
+  //------------------
+  //  Messages
+  //------------------
+
+  messagesList: [],
+
+  messageList: (connectionId, page = 0) => {
+    if (page === 0) {
+      set((state) => ({
+        messagesList: [],
+      }));
+    }
+    const socket = get().socket;
+    socket.send(
+      JSON.stringify({
+        source: "message.list",
+        connectionId: connectionId,
+        page: page,
+      })
+    );
+  },
+
+  messageSend: (connectionId, message) => {
+    const socket = get().socket;
+    socket.send(
+      JSON.stringify({
+        source: "message.send",
+        connectionId: connectionId,
+        message: message,
+      })
+    );
+  },
 
   //------------------
   //  Requests

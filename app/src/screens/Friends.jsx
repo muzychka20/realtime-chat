@@ -88,7 +88,7 @@ function FriendsScreen({ navigation }) {
 
   // Show request list
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
       <FlatList
         data={friendList}
         renderItem={({ item }) => (
