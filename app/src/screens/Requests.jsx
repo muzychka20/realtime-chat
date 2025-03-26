@@ -5,6 +5,7 @@ import { faBell } from "@fortawesome/free-solid-svg-icons/faBell";
 import Cell from "../common/Cell";
 import Thumbnail from "../common/Thumbnail";
 import { TouchableOpacity } from "react-native";
+import utils from "../core/utils";
 
 function RequestAccept({ item }) {
   const requestAccept = useGlobal((state) => state.requestAccept);
@@ -26,8 +27,7 @@ function RequestAccept({ item }) {
 }
 
 function RequestRow({ item }) {
-  const message = "Requested to connect with you";
-  const time = "7m ago";
+  const message = "Requested to connect with you";  
 
   return (
     <Cell>
@@ -40,7 +40,7 @@ function RequestRow({ item }) {
         </Text>
         <Text style={{ color: "#2020202" }}>
           {message}{" "}
-          <Text style={{ color: "#909090", fontSize: 13 }}>{time}</Text>
+          <Text style={{ color: "#909090", fontSize: 13 }}>{utils.formatTime(item.created)}</Text>
         </Text>
       </View>
       <RequestAccept item={item} />
