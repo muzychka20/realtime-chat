@@ -87,6 +87,7 @@ class RequestSerializer(serializers.ModelSerializer):
 class FriendSerializer(serializers.ModelSerializer):
     friend = serializers.SerializerMethodField()
     preview = serializers.SerializerMethodField()
+    updated = serializers.SerializerMethodField()
 
     class Meta:
         model = Connection
@@ -107,8 +108,14 @@ class FriendSerializer(serializers.ModelSerializer):
         else:
             print('Error: No user found in friendserializer!')
 
-    def get_preview(self, data):
-        return 'New connection!'
+    def get_preview(self, obj):
+        if not obj.latest_text:
+            return 'New connection!'
+        return obj.latest_text
+    
+    def get_updated(self, obj):
+        date = obj.latest_created or obj.updated
+        return date.isoformat()
 
 
 class MessageSerializer(serializers.ModelSerializer):

@@ -16,10 +16,34 @@ function responseFriendList(set, get, friendList) {
 function responseMessageList(set, get, data) {
   set((state) => ({
     messagesList: [...get().messagesList, ...data.messages],
+    messagesUsername: data.friend.username
   }));
 }
 
 function responseMessageSend(set, get, data) {
+  const username = data.friendList.username
+  // Move friendList item for this friend to the start of
+  // list, update the preview text and update the time stamp
+  const friendList = [...get().frienfdList]
+  const friendIndex = friendList.findIndex(
+    item => item.friend.username === username
+  )
+  if (friendIndex >= 0) {
+    const item = friendList[friendIndex]
+    item.preview = data.message.text
+    item.updated = data.message.created
+    friendList.splice(friendIndex, 1)
+    friendList.unshift(item)
+    set((state) => ({
+      friendList: friendList
+    }))
+  }
+  // If the message data does not belong to this friend then
+  // don't update the message list, as a fresh messageList will
+  // be loadded the next time the user opens the correct chat window
+  if (username !== get().messagesUsername) {
+    return
+  }
   const messagesList = [data.message, ...get().messagesList];
   set((state) => ({
     messagesList: messagesList,
@@ -296,11 +320,13 @@ const useGlobal = create((set, get) => ({
   //------------------
 
   messagesList: [],
+  messagesUsername: null,
 
   messageList: (connectionId, page = 0) => {
     if (page === 0) {
       set((state) => ({
         messagesList: [],
+        messagesUsername: null,
       }));
     }
     const socket = get().socket;
