@@ -65,11 +65,11 @@ function MessageBubbleMe({ text }) {
 }
 
 function MessageTypingAnimation({ offset }) {
-  const y = useRef(new Animated.Value(0)).current
+  const y = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    const total = 1000
-    const bump = 200
+    const total = 1000;
+    const bump = 200;
 
     const animation = Animated.loop(
       Animated.sequence([
@@ -78,27 +78,27 @@ function MessageTypingAnimation({ offset }) {
           toValue: 1,
           duration: bump,
           easing: Easing.linear,
-          useNativeDriver: true
+          useNativeDriver: true,
         }),
         Animated.timing(y, {
           toValue: 0,
           duration: bump,
           easing: Easing.linear,
-          useNativeDriver: true
+          useNativeDriver: true,
         }),
         Animated.delay(total - bump * 2 - bump * offset),
       ])
-    )
-    animation.start()
+    );
+    animation.start();
     return () => {
-      animation.stop()
-    }
-  }, [])
+      animation.stop();
+    };
+  }, []);
 
   const translateY = y.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, -8]
-  })
+    outputRange: [0, -8],
+  });
 
   return (
     <Animated.View
@@ -107,14 +107,14 @@ function MessageTypingAnimation({ offset }) {
         height: 8,
         marginHorizontal: 1.5,
         borderRadius: 4,
-        backgroundColor: '#606060',
-        transform: [{ translateY }]
+        backgroundColor: "#606060",
+        transform: [{ translateY }],
       }}
     />
-  )
+  );
 }
 
-function MessageBubbleFriend({ text='', friend, typing=false }) {
+function MessageBubbleFriend({ text = "", friend, typing = false }) {
   return (
     <View
       style={{
@@ -137,7 +137,7 @@ function MessageBubbleFriend({ text='', friend, typing=false }) {
         }}
       >
         {typing ? (
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{ flexDirection: "row" }}>
             <MessageTypingAnimation offset={0} />
             <MessageTypingAnimation offset={1} />
             <MessageTypingAnimation offset={2} />
@@ -154,32 +154,32 @@ function MessageBubbleFriend({ text='', friend, typing=false }) {
 }
 
 function MessageBubble({ index, message, friend }) {
-  const [showTyping, setShowTyping] = useState(false)
+  const [showTyping, setShowTyping] = useState(false);
 
-  const messagesTyping = useGlobal(state => state.messagesTyping)
+  const messagesTyping = useGlobal((state) => state.messagesTyping);
 
   useEffect(() => {
-    if (index === 0) return
+    if (index === 0) return;
     if (messagesTyping === null) {
-      setShowTyping(false)
-      return
+      setShowTyping(false);
+      return;
     }
-    setShowTyping(true)
+    setShowTyping(true);
     const check = setInterval(() => {
-      const now = new Date()
-      const ms = now - messagesTyping
+      const now = new Date();
+      const ms = now - messagesTyping;
       if (ms > 10000) {
-        setShowTyping(false)
+        setShowTyping(false);
       }
-    }, 1000)
-    return () => clearInterval(check)
-  }, [messagesTyping])
+    }, 1000);
+    return () => clearInterval(check);
+  }, [messagesTyping]);
 
   if (index === 0) {
     if (showTyping) {
-      return <MessageBubbleFriend friend={friend} typing={true} />
+      return <MessageBubbleFriend friend={friend} typing={true} />;
     }
-    return 
+    return;
   }
 
   return message.is_me ? (
@@ -231,6 +231,8 @@ function MessagesScreen({ navigation, route }) {
   const [message, setMessage] = useState("");
 
   const messagesList = useGlobal((state) => state.messagesList);
+  const messagesNext = useGlobal((state) => state.messagesNext);
+  
   const messageList = useGlobal((state) => state.messageList);
   const messageSend = useGlobal((state) => state.messageSend);
   const messageType = useGlobal((state) => state.messageType);
@@ -258,48 +260,43 @@ function MessagesScreen({ navigation, route }) {
   }
 
   function onType(value) {
-    setMessage(value)
-    messageType(friend.username)
+    setMessage(value);
+    messageType(friend.username);
   }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View
-          style={{
-            flex: 1,
-            marginBottom: Platform.OS === "ios" ? 60 : 0,
+      <View
+        style={{
+          flex: 1,
+          marginBottom: Platform.OS === "ios" ? 60 : 0,
+        }}
+      >
+        <FlatList
+          automaticallyAdjustKeyboardInsets={true}
+          contentContainerStyle={{
+            paddingTop: 30,
           }}
-        >
-          <FlatList
-            automaticallyAdjustKeyboardInsets={true}
-            contentContainerStyle={{
-              paddingTop: 30,
-            }}
-            data={[{id: -1}, ...messagesList]}
-            inverted={true}
-            renderItem={({ item, index }) => (
-              <MessageBubble index={index} message={item} friend={friend} />
-            )}
-            keyExtractor={(item) => item.id}
-          />
-        </View>
-      </TouchableWithoutFeedback>
+          data={[{ id: -1 }, ...messagesList]}
+          inverted={true}
+          onEndReached={() => {
+            if (messagesNext) {
+              messageList(connectionId, messagesNext)
+            }
+          }}
+          renderItem={({ item, index }) => (
+            <MessageBubble index={index} message={item} friend={friend} />
+          )}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
 
       {Platform.OS === "ios" ? (
         <InputAccessoryView>
-          <MessageInput
-            message={message}
-            setMessage={onType}
-            onSend={onSend}
-          />
+          <MessageInput message={message} setMessage={onType} onSend={onSend} />
         </InputAccessoryView>
       ) : (
-        <MessageInput
-          message={message}
-          setMessage={onType}
-          onSend={onSend}
-        />
+        <MessageInput message={message} setMessage={onType} onSend={onSend} />
       )}
     </SafeAreaView>
   );
