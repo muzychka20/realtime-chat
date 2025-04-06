@@ -4,7 +4,11 @@ This is a full-stack real-time chat application built with Django and Channels f
 
 You can use this app to send and receive messages instantly between connected users, see active conversations, and test a minimal yet functional messaging UI.
 
----
+<div style="display: flex; justify-content: space-between;">
+    <img src="docs/1.png" alt="Image 1" width="30%" />
+    <img src="docs/3.png" alt="Image 3" width="30%" />
+    <img src="docs/2.png" alt="Image 2" width="30%" />
+</div>
 
 ## 🚀 Features
 
@@ -14,8 +18,6 @@ You can use this app to send and receive messages instantly between connected us
 - 🕓 **Message History**: Chat history is preserved in the database (SQLite by default).
 - 🧰 **Modular Structure**: Clean project layout separating concerns (API, app logic, templates, routing).
 - 🔄 **Asynchronous Support**: Leverages Django Channels + Redis for real-time, async operations.
-
----
 
 ## 🗂️ Project Structure
 
@@ -73,13 +75,12 @@ Use to generate a *requirements.txt* file that contains a list of all the instal
 pip freeze > requirements.txt
 ``` 
 
-*Makefile:*
-Windows:
+*Makefile Windows:*
 ```sh
 mingw32-make.exe Makefile run-android
 ```
 
-Open simulator in terminal (macOS)
+*Open simulator in terminal (macOS):*
 ```sh
 open -a Simulator.app
 ```

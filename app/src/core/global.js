@@ -30,10 +30,10 @@ function responseMessageList(set, get, data) {
 }
 
 function responseMessageSend(set, get, data) {
-  const username = data.friendList.username
+  const username = data.friend.username
   // Move friendList item for this friend to the start of
   // list, update the preview text and update the time stamp
-  const friendList = [...get().frienfdList]
+  const friendList = [...get().friendList]
   const friendIndex = friendList.findIndex(
     item => item.friend.username === username
   )
@@ -214,7 +214,6 @@ const useGlobal = create((set, get) => ({
       authenticated: true,
       user: user,
     }));
-    get().socketConnect();
   },
 
   logout: () => {
@@ -347,7 +346,7 @@ const useGlobal = create((set, get) => ({
     if (page === 0) {
       set((state) => ({
         messagesList: [],
-        messagesNext: [],
+        messagesNext: null,
         messageTyping: null,
         messagesUsername: null,
       }));
