@@ -4,7 +4,7 @@ This is a full-stack real-time chat application built with Django and Channels f
 
 You can use this app to send and receive messages instantly between connected users, see active conversations, and test a minimal yet functional messaging UI.
 
-<div style="display: flex; justify-content: space-between;">
+<div style="display: flex; justify-content: space-between; margin: 0 auto;">
     <img src="docs/4.png" alt="Image 1" width="30%" />
     <img src="docs/3.png" alt="Image 3" width="30%" />
     <img src="docs/2.png" alt="Image 2" width="30%" />
