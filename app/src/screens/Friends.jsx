@@ -10,6 +10,7 @@ import { faInbox } from "@fortawesome/free-solid-svg-icons/faInbox";
 import useGlobal from "../core/global";
 import Thumbnail from "../common/Thumbnail";
 import Cell from "../common/Cell";
+import utils from "../core/utils"
 
 
 function FriendRow({ navigation, item }) {
